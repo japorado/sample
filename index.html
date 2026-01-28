@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Images</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:#0b0b0c;
+      color:#f2f2f2;
+    }
+    header{
+      padding:18px 16px;
+      border-bottom:1px solid rgba(255,255,255,.12);
+      position:sticky; top:0; background:#0b0b0c;
+      z-index:2;
+    }
+    header h1{ margin:0; font-size:16px; font-weight:600; letter-spacing:.2px; }
+    .wrap{ max-width:960px; margin:0 auto; padding:14px; }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap:12px;
+      align-items:start;
+    }
+    figure{
+      margin:0;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+    }
+    img{
+      width:100%;
+      height:auto;
+      display:block;
+      cursor: zoom-in;
+    }
+    .hint{ opacity:.7; font-size:12px; margin-top:10px; }
+
+    dialog{
+      border:none;
+      padding:0;
+      background: transparent;
+      max-width: 98vw;
+      max-height: 98vh;
+    }
+    dialog::backdrop{ background: rgba(0,0,0,.75); }
+    .lightbox{
+      position:relative;
+      background:#000;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .lightbox img{
+      max-width: 96vw;
+      max-height: 92vh;
+      width:auto;
+      height:auto;
+      cursor: zoom-out;
+      display:block;
+    }
+    .close{
+      position:absolute;
+      top:8px; right:8px;
+      border:1px solid rgba(255,255,255,.25);
+      background: rgba(0,0,0,.55);
+      color:#fff;
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:14px;
+      line-height:1;
+    }
+  </style>
+</head>
+<body>
+  <header><div class="wrap"><h1>Images</h1></div></header>
+  <main class="wrap">
+    <div class="grid">
+      <figure><img src="img1.jpg" alt="Image 1" loading="lazy" /></figure>
+      <figure><img src="img2.jpg" alt="Image 2" loading="lazy" /></figure>
+    </div>
+    <div class="hint">Tip: click an image to view larger.</div>
+
+    <dialog id="dlg" aria-label="Image preview">
+      <div class="lightbox">
+        <button class="close" id="closeBtn" aria-label="Close">✕</button>
+        <img id="dlgImg" alt="Preview" />
+      </div>
+    </dialog>
+  </main>
+
+  <script>
+    const dlg = document.getElementById('dlg');
+    const dlgImg = document.getElementById('dlgImg');
+    const closeBtn = document.getElementById('closeBtn');
+
+    document.querySelectorAll('.grid img').forEach(img => {
+      img.addEventListener('click', () => {
+        dlgImg.src = img.getAttribute('src');
+        dlg.showModal();
+      });
+    });
+
+    const close = () => dlg.close();
+    closeBtn.addEventListener('click', close);
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+    dlgImg.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dlg.open) close();
+    });
+  </script>
+</body>
+</html>
